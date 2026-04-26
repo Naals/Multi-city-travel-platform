@@ -13,6 +13,8 @@
   <description>Microservice-based multi-city travel booking platform with Dijkstra routing</description>
 
   <modules>
+    <module>config-server</module>
+    <module>eureka-server</module>
   </modules>
 
   <properties>
