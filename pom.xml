@@ -17,6 +17,7 @@
     <module>eureka-server</module>
     <module>auth-service</module>
     <module>user-service</module>
+    <module>flight-service</module>
   </modules>
 
   <properties>
