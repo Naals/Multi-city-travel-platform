@@ -1,0 +1,5 @@
+version: "3.9"
+
+include:
+  - docker-compose.infra.yml
+  - docker-compose.services.yml
