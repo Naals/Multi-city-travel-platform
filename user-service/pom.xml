@@ -14,6 +14,9 @@
     <artifactId>user-service</artifactId>
     <name>User Service</name>
     <description>User profiles, preferences, gRPC server for inter-service calls</description>
+    <properties>
+        <os.detected.classifier>osx-aarch_64</os.detected.classifier>
+    </properties>
 
     <dependencies>
         <dependency>
@@ -108,6 +111,11 @@
             <artifactId>junit-jupiter</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
+            <version>1.3.2</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -136,7 +144,7 @@
                     <pluginArtifact>
                         io.grpc:protoc-gen-grpc-java:${grpc.version}:exe:${os.detected.classifier}
                     </pluginArtifact>
-                    <protoSourceRoot>${project.basedir}/../proto</protoSourceRoot>
+                    <protoSourceRoot>${project.basedir}/proto</protoSourceRoot>
                 </configuration>
                 <executions>
                     <execution>
