@@ -2,6 +2,7 @@ package com.project.authservice.auth.service;
 
 
 import com.project.authservice.auth.config.JwtProperties;
+import com.project.authservice.auth.exception.InvalidTokenException;
 import com.project.authservice.auth.model.UserCredential;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -86,7 +87,7 @@ public class TokenService {
     }
 
     private boolean isBlacklisted(String jti) {
-        return Boolean.TRUE.equals(redisTemplate.hasKey(BLACKLIST_KEY_PREFIX + jti));
+        return redisTemplate.hasKey(BLACKLIST_KEY_PREFIX + jti);
     }
     public String generateRefreshToken(UserCredential user) {
         String tokenId = UUID.randomUUID().toString();
@@ -126,7 +127,7 @@ public class TokenService {
 
     public void revokeAllRefreshTokens(String userId) {
         var keys = redisTemplate.keys(REFRESH_KEY_PREFIX + userId + ":*");
-        if (keys != null && !keys.isEmpty()) {
+        if (!keys.isEmpty()) {
             redisTemplate.delete(keys);
         }
     }
