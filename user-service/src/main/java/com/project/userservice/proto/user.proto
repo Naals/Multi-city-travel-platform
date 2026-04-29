@@ -1,0 +1,59 @@
+syntax = "proto3";
+
+package com.project.proto;
+
+option java_multiple_files = true;
+option java_package = "com.project.proto";
+option java_outer_classname = "UserProto";
+
+
+service UserGrpcService {
+  // Fetch a user by their UUID
+  rpc GetUserById (GetUserByIdRequest) returns (UserResponse);
+
+  // Fetch minimal profile for booking confirmation emails
+  rpc GetUserProfile (GetUserByIdRequest) returns (UserProfileResponse);
+
+  // Check if user exists and is active
+  rpc ValidateUser (ValidateUserRequest) returns (ValidateUserResponse);
+}
+
+// ── Request Messages ─────────────────────────────────────────
+
+message GetUserByIdRequest {
+  string user_id = 1;   // UUID as string
+}
+
+message ValidateUserRequest {
+  string user_id = 1;
+  string email   = 2;   // optional: cross-check email vs id
+}
+
+// ── Response Messages ────────────────────────────────────────
+
+message UserResponse {
+  string  user_id         = 1;
+  string  first_name      = 2;
+  string  last_name       = 3;
+  string  email           = 4;
+  string  phone           = 5;
+  string  nationality     = 6;
+  string  passport_number = 7;
+  string  passport_expiry = 8;
+  bool    is_active       = 9;
+  string  created_at      = 10;
+}
+
+message UserProfileResponse {
+  string user_id    = 1;
+  string first_name = 2;
+  string last_name  = 3;
+  string email      = 4;
+  string phone      = 5;
+}
+
+message ValidateUserResponse {
+  bool   is_valid  = 1;
+  bool   is_active = 2;
+  string reason    = 3;
+}
