@@ -6,6 +6,7 @@ import com.project.userservice.mapper.UserMapper;
 import com.project.userservice.model.SavedRoute;
 import com.project.userservice.model.User;
 import com.project.userservice.repository.*;
+import io.micrometer.observation.annotation.Observed;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -42,6 +43,7 @@ public class UserService {
         return mapper.toDto(user);
     }
 
+    @Observed(name = "user.get", contextualName = "get-user-by-id")
     @Transactional(readOnly = true)
     public UserDto getUserById(UUID id) {
         return mapper.toDto(findUserOrThrow(id));
@@ -123,6 +125,7 @@ public class UserService {
                         "User not found: " + id));
     }
 
+    @Observed(name = "user.validate", contextualName = "validate-user-grpc")
     @Transactional(readOnly = true)
     public boolean isUserActiveById(UUID id) {
         return userRepo.existsByIdAndActive(id);
