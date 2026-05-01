@@ -1,6 +1,7 @@
 package com.project.flightservice.service;
 
 import com.project.flightservice.algorithm.GraphEdge;
+import com.project.flightservice.cache.GraphCacheService;
 import com.project.flightservice.model.FlightRoute;
 import com.project.flightservice.repository.FlightRouteRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,7 @@ import java.util.*;
 public class GraphBuilderService {
 
     private final FlightRouteRepository  routeRepository;
-    private final GraphCacheService      cacheService;
+    private final GraphCacheService cacheService;
 
 
     @Transactional(readOnly = true)
@@ -69,7 +70,7 @@ public class GraphBuilderService {
     @Scheduled(fixedDelayString = "${graph.cache.ttl-minutes:5}000")
     public void scheduledGraphRefresh() {
         log.debug("Scheduled graph refresh triggered");
-        var uuidListMap = buildAndCacheGraph();
+        buildAndCacheGraph();
     }
 
     public void invalidateFlightEdges(UUID flightId) {
