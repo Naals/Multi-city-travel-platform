@@ -10,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.server.service.GrpcService;
 
 import java.util.UUID;
+// Add this import at the top (was missing, causing compile error)
+import com.project.userservice.exception.UserNotFoundException;
 
 @Slf4j
 @GrpcService
