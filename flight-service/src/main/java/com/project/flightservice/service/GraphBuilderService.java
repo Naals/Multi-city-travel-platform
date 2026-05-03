@@ -4,6 +4,7 @@ import com.project.flightservice.algorithm.GraphEdge;
 import com.project.flightservice.cache.GraphCacheService;
 import com.project.flightservice.model.FlightRoute;
 import com.project.flightservice.repository.FlightRouteRepository;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -18,9 +19,13 @@ import java.util.*;
 @RequiredArgsConstructor
 public class GraphBuilderService {
 
-    private final FlightRouteRepository  routeRepository;
-    private final GraphCacheService cacheService;
+    private final FlightRouteRepository routeRepository;
+    private final GraphCacheService     cacheService;
 
+    @PostConstruct
+    public void initGraph() {
+        buildAndCacheGraph();
+    }
 
     @Transactional(readOnly = true)
     public Map<UUID, List<GraphEdge>> buildAndCacheGraph() {
@@ -28,7 +33,6 @@ public class GraphBuilderService {
         Instant now = Instant.now();
 
         List<FlightRoute> routes = routeRepository.findAllActiveRoutesAfter(now);
-
         Map<UUID, List<GraphEdge>> graph = new HashMap<>();
 
         for (FlightRoute route : routes) {
@@ -56,14 +60,11 @@ public class GraphBuilderService {
         }
 
         graph.values().forEach(edges ->
-                edges.sort(Comparator.comparingDouble(e ->
-                        e.getWeightPrice().doubleValue()))
+                edges.sort(Comparator.comparingDouble(e -> e.getWeightPrice().doubleValue()))
         );
 
         cacheService.storeGraph(graph);
-
-        log.info("Flight graph built: {} cities, {} edges",
-                graph.size(), routes.size());
+        log.info("Flight graph built: {} cities, {} edges", graph.size(), routes.size());
         return graph;
     }
 
