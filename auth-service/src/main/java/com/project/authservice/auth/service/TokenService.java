@@ -87,7 +87,7 @@ public class TokenService {
     }
 
     private boolean isBlacklisted(String jti) {
-        return redisTemplate.hasKey(BLACKLIST_KEY_PREFIX + jti);
+        return Boolean.TRUE.equals(redisTemplate.hasKey(BLACKLIST_KEY_PREFIX + jti));
     }
     public String generateRefreshToken(UserCredential user) {
         String tokenId = UUID.randomUUID().toString();
@@ -127,7 +127,7 @@ public class TokenService {
 
     public void revokeAllRefreshTokens(String userId) {
         var keys = redisTemplate.keys(REFRESH_KEY_PREFIX + userId + ":*");
-        if (!keys.isEmpty()) {
+        if (keys != null && !keys.isEmpty()) {
             redisTemplate.delete(keys);
         }
     }
