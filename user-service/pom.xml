@@ -14,9 +14,6 @@
     <artifactId>user-service</artifactId>
     <name>User Service</name>
     <description>User profiles, preferences, gRPC server for inter-service calls</description>
-    <properties>
-        <os.detected.classifier>osx-aarch_64</os.detected.classifier>
-    </properties>
 
     <dependencies>
         <dependency>
