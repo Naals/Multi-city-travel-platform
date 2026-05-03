@@ -90,5 +90,5 @@ springdoc:
 
 logging:
   level:
-    com.multicitytravel.auth: DEBUG
+    com.project.authservice: DEBUG
     org.springframework.security: WARN
