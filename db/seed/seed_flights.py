@@ -170,9 +170,9 @@ def seed_cities(country_ids):
     for row in rows:
         cur.execute("""
             INSERT INTO cities
-                (id, country_id, name, iata_city_code, timezone, coordinates)
+                (id, country_id, name, iata_city_code, timezone, longitude, latitude)
             VALUES
-                (%s, %s, %s, %s, %s, ST_SetSRID(ST_MakePoint(%s, %s), 4326))
+                (%s, %s, %s, %s, %s, %s, %s)
             ON CONFLICT DO NOTHING
         """, row)
     print(f"    ✓ {len(rows)} cities")
