@@ -1,6 +1,7 @@
 package com.project.bookingservice.feign;
 
 
+import com.project.bookingservice.exception.FlightServiceUnavailableException;
 import com.project.bookingservice.feign.dto.FlightAvailabilityResponse;
 import com.project.bookingservice.feign.dto.SeatLockRequest;
 import com.project.bookingservice.feign.dto.SeatLockResponse;

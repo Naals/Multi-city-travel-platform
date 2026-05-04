@@ -1,6 +1,7 @@
 package com.project.bookingservice.grpc;
 
 
+import com.project.bookingservice.exception.UserValidationException;
 import com.project.proto.*;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
