@@ -1,3 +1,143 @@
+server:
+  port: ${BOOKING_SERVICE_PORT:8084}
+
 spring:
   application:
     name: booking-service
+  config:
+    import: optional:configserver:${SPRING_CLOUD_CONFIG_URI:http://localhost:8888}
+
+  datasource:
+    url: jdbc:postgresql://${BOOKING_DB_HOST:localhost}:${BOOKING_DB_PORT:5435}/${BOOKING_DB_NAME:booking_db}
+    username: ${BOOKING_DB_USER:booking_user}
+    password: ${BOOKING_DB_PASSWORD:booking_secret_pass}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      pool-name: booking-pool
+      maximum-pool-size: 15
+      minimum-idle: 3
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    open-in-view: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USER:rabbit_user}
+    password: ${RABBITMQ_PASSWORD:rabbit_secret_pass}
+    virtual-host: ${RABBITMQ_VHOST:travel_vhost}
+    connection-timeout: 5000
+    listener:
+      simple:
+        acknowledge-mode: manual
+        retry:
+          enabled: true
+          max-attempts: 3
+          initial-interval: 1000
+          multiplier: 2.0
+          max-interval: 10000
+
+# gRPC client — points to user-service
+grpc:
+  client:
+    user-service:
+      address: discovery:///user-service
+      negotiation-type: plaintext
+      enable-keep-alive: true
+      keep-alive-time: 30s
+      keep-alive-timeout: 5s
+
+# Feign client config
+feign:
+  client:
+    config:
+      flight-service:
+        connect-timeout: 3000
+        read-timeout: 5000
+        logger-level: BASIC
+  circuitbreaker:
+    enabled: true
+
+# Resilience4j
+resilience4j:
+  circuitbreaker:
+    instances:
+      userGrpc:
+        sliding-window-size: 10
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 10s
+        minimum-number-of-calls: 5
+        permitted-number-of-calls-in-half-open-state: 3
+        automatic-transition-from-open-to-half-open-enabled: true
+        record-exceptions:
+          - io.grpc.StatusRuntimeException
+          - java.util.concurrent.TimeoutException
+      flightFeign:
+        sliding-window-size: 10
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 15s
+        minimum-number-of-calls: 5
+        record-exceptions:
+          - feign.FeignException
+          - java.util.concurrent.TimeoutException
+  retry:
+    instances:
+      userGrpc:
+        max-attempts: 3
+        wait-duration: 500ms
+        retry-exceptions:
+          - io.grpc.StatusRuntimeException
+      flightFeign:
+        max-attempts: 3
+        wait-duration: 1000ms
+  timelimiter:
+    instances:
+      userGrpc:
+        timeout-duration: 3s
+      flightFeign:
+        timeout-duration: 5s
+  bulkhead:
+    instances:
+      bookingService:
+        max-concurrent-calls: 20
+        max-wait-duration: 1s
+
+# Eureka
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_SERVER_URL:http://localhost:8761/eureka}
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${server.port}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics,circuitbreakers
+  tracing:
+    sampling:
+      probability: 1.0
+  zipkin:
+    tracing:
+      endpoint: ${ZIPKIN_BASE_URL:http://localhost:9411}/api/v2/spans
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
