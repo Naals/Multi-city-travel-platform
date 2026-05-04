@@ -6,7 +6,7 @@ import com.project.bookingservice.feign.FlightFeignClient;
 import com.project.bookingservice.feign.dto.*;
 import com.project.bookingservice.grpc.UserGrpcClient;
 import com.project.bookingservice.model.*;
-import com.project.bookingservice.rabbitmq.PaymentEventPublisher;
+import com.project.bookingservice.rabbitmq.event.PaymentEventPublisher;
 import com.project.bookingservice.rabbitmq.event.PaymentRequestEvent;
 import com.project.bookingservice.repository.*;
 import com.project.bookingservice.repository.repository.BookingEventRepository;
@@ -31,7 +31,7 @@ public class BookingService {
     private final BookingEventRepository eventRepo;
     private final UserGrpcClient         userGrpcClient;
     private final FlightFeignClient      flightFeignClient;
-    private final PaymentEventPublisher  paymentPublisher;
+    private final PaymentEventPublisher paymentPublisher;
 
 
     @Observed(name = "booking.create")
