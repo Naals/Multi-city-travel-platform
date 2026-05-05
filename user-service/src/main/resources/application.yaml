@@ -97,5 +97,5 @@ springdoc:
 
 logging:
   level:
-    com.multicitytravel.user: DEBUG
+    com.project.user: DEBUG
     io.grpc: WARN

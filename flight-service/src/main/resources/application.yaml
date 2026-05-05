@@ -99,3 +99,7 @@ springdoc:
     path: /api-docs
   swagger-ui:
     path: /swagger-ui.html
+
+logging:
+  level:
+    com.project.flightservice: DEBUG
