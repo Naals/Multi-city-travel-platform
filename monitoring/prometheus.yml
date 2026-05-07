@@ -1,0 +1,103 @@
+# ============================================================
+# Prometheus Scrape Configuration
+# Scrapes /actuator/prometheus from all Spring Boot services
+# ============================================================
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  scrape_timeout: 10s
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: []
+
+rule_files: []
+
+scrape_configs:
+
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  - job_name: "api-gateway"
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      - targets: ["api-gateway:8080"]
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: service
+        replacement: "api-gateway"
+
+  - job_name: "auth-service"
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      - targets: ["auth-service:8081"]
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: service
+        replacement: "auth-service"
+
+  - job_name: "user-service"
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      - targets: ["user-service:8082"]
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: service
+        replacement: "user-service"
+
+  - job_name: "flight-service"
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      - targets: ["flight-service:8083"]
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: service
+        replacement: "flight-service"
+
+  - job_name: "booking-service"
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      - targets: ["booking-service:8084"]
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: service
+        replacement: "booking-service"
+
+  - job_name: "payment-service"
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      - targets: ["payment-service:8085"]
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: service
+        replacement: "payment-service"
+
+  - job_name: "review-service"
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      - targets: ["review-service:8086"]
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: service
+        replacement: "review-service"
+
+  - job_name: "notification-service"
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      - targets: ["notification-service:8087"]
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: service
+        replacement: "notification-service"
+
+  # Kafka JMX metrics (if jmx-exporter sidecar added later)
+  - job_name: "kafka"
+    static_configs:
+      - targets: ["kafka:9101"]
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: service
+        replacement: "kafka"
