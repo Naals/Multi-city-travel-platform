@@ -2,8 +2,9 @@ package com.project.authservice.auth.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
-import java.net.InetAddress;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -22,8 +23,9 @@ public class AuthAuditLog {
     private String email;
 
     @Column(name = "event_type", nullable = false)
-    private String eventType;   
+    private String eventType;
 
+    @JdbcTypeCode(SqlTypes.INET)
     @Column(name = "ip_address", columnDefinition = "inet")
     private String ipAddress;
 
