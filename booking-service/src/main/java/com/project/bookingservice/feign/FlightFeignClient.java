@@ -15,18 +15,19 @@ import java.util.UUID;
 public interface FlightFeignClient {
 
     @GetMapping("/api/flights/{flightId}/availability")
-    FlightAvailabilityResponse checkAvailability(@PathVariable UUID flightId);
+    FlightAvailabilityResponse checkAvailability(
+            @PathVariable("flightId") UUID flightId
+    );
 
     @PostMapping("/api/flights/{flightId}/seats/lock")
     SeatLockResponse lockSeat(
-            @PathVariable UUID flightId,
+            @PathVariable("flightId") UUID flightId,
             @RequestBody SeatLockRequest request
     );
 
-
     @PostMapping("/api/flights/{flightId}/seats/release")
     void releaseSeat(
-            @PathVariable UUID flightId,
+            @PathVariable("flightId") UUID flightId,
             @RequestBody SeatLockRequest request
     );
 }
