@@ -68,6 +68,16 @@ public class RabbitMQConfig {
     }
 
     @Bean
+    public Queue bookingPaymentQueueCompleted() {
+        return new Queue("booking.payment.completed", true);
+    }
+
+    @Bean
+    public Queue bookingPaymentQueueFailed() {
+        return new Queue("booking.payment.failed", true);
+    }
+
+    @Bean
     public Binding paymentRequestBinding() {
         return BindingBuilder.bind(paymentRequestQueue())
                 .to(paymentsExchange()).with(RK_PAYMENT_REQUEST);

@@ -19,18 +19,18 @@ CREATE TYPE cancellation_reason AS ENUM (
     );
 
 CREATE TABLE bookings (
-                          id                  UUID              PRIMARY KEY DEFAULT uuid_generate_v4(),
-                          trip_id             UUID              NOT NULL DEFAULT uuid_generate_v4(),
+                          id                  UUID              PRIMARY KEY DEFAULT gen_random_uuid(),
+                          trip_id             UUID              NOT NULL DEFAULT gen_random_uuid(),
                           user_id             UUID              NOT NULL,
                           flight_id           UUID              NOT NULL,
                           flight_number       VARCHAR(10)       NOT NULL,
-                          origin_iata         CHAR(3)           NOT NULL,
-                          dest_iata           CHAR(3)           NOT NULL,
+                          origin_iata         VARCHAR(3)           NOT NULL,
+                          dest_iata           VARCHAR(3)           NOT NULL,
                           departure_at        TIMESTAMPTZ       NOT NULL,
                           arrival_at          TIMESTAMPTZ       NOT NULL,
                           cabin               VARCHAR(20)       NOT NULL,
                           price_paid          NUMERIC(10,2)     NOT NULL,
-                          currency            CHAR(3)           NOT NULL DEFAULT 'USD',
+                          currency            VARCHAR(3)           NOT NULL DEFAULT 'USD',
                           seat_number         VARCHAR(5),
                           passengers          JSONB             NOT NULL DEFAULT '[]',
                           status              booking_status    NOT NULL DEFAULT 'PENDING',

@@ -43,7 +43,7 @@
         </dependency>
         <dependency>
             <groupId>org.flywaydb</groupId>
-            <artifactId>flyway-database-postgresql</artifactId>
+            <artifactId>flyway-core</artifactId>
         </dependency>
 
         <!-- gRPC client -->
@@ -141,6 +141,12 @@
             <artifactId>spring-rabbit-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
+            <version>1.3.2</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -178,6 +184,23 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+
+                <groupId>org.flywaydb</groupId>
+
+                <artifactId>flyway-maven-plugin</artifactId>
+
+                <configuration>
+
+                    <url>jdbc:postgresql://localhost:5435/booking_db</url>
+
+                    <user>booking_user</user>
+
+                    <password>booking_secret_pass</password>
+
+                </configuration>
+
             </plugin>
         </plugins>
     </build>
