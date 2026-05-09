@@ -2,6 +2,10 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 CREATE TYPE gender_type AS ENUM ('MALE', 'FEMALE', 'OTHER', 'PREFER_NOT_TO_SAY');
 
+CREATE OR REPLACE FUNCTION fn_update_updated_at()
+    RETURNS TRIGGER LANGUAGE plpgsql AS $$
+BEGIN NEW.updated_at = NOW(); RETURN NEW; END; $$;
+
 CREATE TABLE users (
                        id              UUID         PRIMARY KEY,
                        first_name      VARCHAR(100) NOT NULL,
