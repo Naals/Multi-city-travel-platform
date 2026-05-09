@@ -20,7 +20,7 @@ CREATE TYPE cabin_class AS ENUM (
     );
 
 CREATE TABLE flights (
-                         id                  UUID          PRIMARY KEY DEFAULT uuid_generate_v4(),
+                         id                  UUID          PRIMARY KEY DEFAULT gen_random_uuid(),
                          flight_number       VARCHAR(10)   NOT NULL,       -- TK001, LH404
                          airline_code        CHAR(2)       NOT NULL,       -- TK, LH, AA
                          airline_name        VARCHAR(100)  NOT NULL,
@@ -45,9 +45,9 @@ CREATE TABLE flights (
                          current_price       NUMERIC(10,2) NOT NULL CHECK (current_price >= 0),
                          currency            CHAR(3)       NOT NULL DEFAULT 'USD',
     -- Duration in minutes (computed but stored for graph efficiency)
-                         duration_minutes    INT GENERATED ALWAYS AS (
-                             EXTRACT(EPOCH FROM (scheduled_arrival - scheduled_departure)) / 60
-                             )::INT STORED,
+                         duration_minutes INT GENERATED ALWAYS AS (
+                             (EXTRACT(EPOCH FROM (scheduled_arrival - scheduled_departure)) / 60)::INT
+                             ) STORED,
     -- State
                          status              flight_status NOT NULL DEFAULT 'SCHEDULED',
                          aircraft_type       VARCHAR(20),   -- B737, A320, B777
@@ -86,7 +86,7 @@ CREATE TRIGGER trg_flights_updated_at
 -- This table is rebuilt by GraphBuilderService on startup + cache miss.
 -- ============================================================
 CREATE TABLE flight_routes (
-                               id                  UUID          PRIMARY KEY DEFAULT uuid_generate_v4(),
+                               id                  UUID          PRIMARY KEY DEFAULT gen_random_uuid(),
                                flight_id           UUID          NOT NULL REFERENCES flights(id) ON DELETE CASCADE,
                                origin_city_id      UUID          NOT NULL REFERENCES cities(id),
                                dest_city_id        UUID          NOT NULL REFERENCES cities(id),
@@ -114,7 +114,7 @@ CREATE INDEX idx_flight_routes_graph
     WHERE is_active = TRUE;
 
 CREATE TABLE seat_inventory (
-                                id              UUID          PRIMARY KEY DEFAULT uuid_generate_v4(),
+                                id              UUID          PRIMARY KEY DEFAULT gen_random_uuid(),
                                 flight_id       UUID          NOT NULL REFERENCES flights(id) ON DELETE CASCADE,
                                 cabin           cabin_class   NOT NULL,
                                 seats_total     INT           NOT NULL CHECK (seats_total > 0),

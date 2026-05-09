@@ -9,7 +9,7 @@ DO $$
 $$;
 
 CREATE TABLE countries (
-                           id           UUID         PRIMARY KEY DEFAULT uuid_generate_v4(),
+                           id           UUID         PRIMARY KEY DEFAULT gen_random_uuid(),
                            name         VARCHAR(100) NOT NULL,
                            iso_code     CHAR(2)      NOT NULL,
                            continent    VARCHAR(50)  NOT NULL,
@@ -23,7 +23,7 @@ CREATE UNIQUE INDEX uq_countries_name  ON countries (LOWER(name));
 CREATE INDEX idx_countries_continent   ON countries (continent);
 
 CREATE TABLE cities (
-                        id             UUID         PRIMARY KEY DEFAULT uuid_generate_v4(),
+                        id             UUID         PRIMARY KEY DEFAULT gen_random_uuid(),
                         country_id     UUID         NOT NULL REFERENCES countries(id),
                         name           VARCHAR(100) NOT NULL,
                         iata_city_code VARCHAR(3),
@@ -40,7 +40,7 @@ CREATE INDEX idx_cities_iata    ON cities (iata_city_code);
 CREATE INDEX idx_cities_active  ON cities (is_active) WHERE is_active = TRUE;
 
 CREATE TABLE airports (
-                          id             UUID         PRIMARY KEY DEFAULT uuid_generate_v4(),
+                          id             UUID         PRIMARY KEY DEFAULT gen_random_uuid(),
                           city_id        UUID         NOT NULL REFERENCES cities(id),
                           name           VARCHAR(200) NOT NULL,
                           iata_code      CHAR(3)      NOT NULL,
