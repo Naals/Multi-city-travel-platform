@@ -2,6 +2,8 @@ package com.project.bookingservice.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.JdbcType;
+import org.hibernate.dialect.PostgreSQLEnumJdbcType;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -20,9 +22,11 @@ public class BookingEvent {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "from_status")
+    @JdbcType(PostgreSQLEnumJdbcType.class)
     private BookingStatus fromStatus;
 
     @Enumerated(EnumType.STRING)
+    @JdbcType(PostgreSQLEnumJdbcType.class)
     @Column(name = "to_status", nullable = false)
     private BookingStatus toStatus;
 

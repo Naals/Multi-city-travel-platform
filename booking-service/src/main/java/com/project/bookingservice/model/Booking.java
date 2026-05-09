@@ -4,8 +4,10 @@ import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.JdbcType;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.dialect.PostgreSQLEnumJdbcType;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -66,12 +68,14 @@ public class Booking {
     private List<Map<String, Object>> passengers = new java.util.ArrayList<>();
 
     @Enumerated(EnumType.STRING)
+    @JdbcType(PostgreSQLEnumJdbcType.class)
     @Column(nullable = false)
     @Builder.Default
     private BookingStatus status = BookingStatus.PENDING;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "cancellation_reason")
+    @JdbcType(PostgreSQLEnumJdbcType.class)
     private CancellationReason cancellationReason;
 
     @Column(name = "cancelled_at")
