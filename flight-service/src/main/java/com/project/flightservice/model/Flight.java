@@ -2,10 +2,13 @@ package com.project.flightservice.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.type.SqlTypes;
 
 import java.math.BigDecimal;
+import java.sql.Types;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -22,6 +25,7 @@ public class Flight {
     private String flightNumber;
 
     @Column(name = "airline_code", nullable = false, length = 2)
+    @JdbcTypeCode(Types.CHAR)
     private String airlineCode;
 
     @Column(name = "airline_name", nullable = false, length = 100)
@@ -62,8 +66,9 @@ public class Flight {
     private int seatsBooked = 0;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "cabin_class")
     @Builder.Default
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     private CabinClass cabin = CabinClass.ECONOMY;
 
     @Column(name = "base_price", nullable = false, precision = 10, scale = 2)
@@ -73,12 +78,14 @@ public class Flight {
     private BigDecimal currentPrice;
 
     @Column(nullable = false, length = 3)
+    @JdbcTypeCode(Types.CHAR)
     @Builder.Default
     private String currency = "USD";
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "flight_status")
     @Builder.Default
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     private FlightStatus status = FlightStatus.SCHEDULED;
 
     @Column(name = "aircraft_type", length = 20)

@@ -3,7 +3,9 @@ package com.project.flightservice.model;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.JdbcTypeCode;
 
+import java.sql.Types;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -20,12 +22,14 @@ public class Country {
     private String name;
 
     @Column(name = "iso_code", nullable = false, unique = true, length = 2)
+    @JdbcTypeCode(Types.CHAR)
     private String isoCode;
 
     @Column(nullable = false, length = 50)
     private String continent;
 
     @Column(length = 3)
+    @JdbcTypeCode(Types.CHAR)
     private String currency;
 
     @Column(name = "is_active", nullable = false)

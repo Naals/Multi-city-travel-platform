@@ -2,9 +2,12 @@ package com.project.flightservice.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.type.SqlTypes;
 
 import java.math.BigDecimal;
+import java.sql.Types;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -49,10 +52,12 @@ public class FlightRoute {
     private Instant arrivalAt;
 
     @Column(name = "airline_code", nullable = false, length = 2)
+    @JdbcTypeCode(Types.CHAR)
     private String airlineCode;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(name = "cabin", nullable = false, columnDefinition = "cabin_class")
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     private CabinClass cabin;
 
     @Column(name = "is_active", nullable = false)

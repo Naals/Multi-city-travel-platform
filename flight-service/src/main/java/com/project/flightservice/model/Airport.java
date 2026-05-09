@@ -3,8 +3,10 @@ package com.project.flightservice.model;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.JdbcTypeCode;
 
 import java.math.BigDecimal;
+import java.sql.Types;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -24,10 +26,13 @@ public class Airport {
     @Column(nullable = false, length = 200)
     private String name;
 
+
     @Column(name = "iata_code", nullable = false, unique = true, length = 3)
+    @JdbcTypeCode(Types.CHAR)
     private String iataCode;
 
     @Column(name = "icao_code", length = 4)
+    @JdbcTypeCode(Types.CHAR)
     private String icaoCode;
 
     @Column(name = "terminal_count", nullable = false)
