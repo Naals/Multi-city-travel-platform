@@ -21,7 +21,7 @@ CREATE TYPE payment_method AS ENUM (
     );
 
 CREATE TABLE payments (
-                          id                UUID           PRIMARY KEY DEFAULT uuid_generate_v4(),
+                          id                UUID           PRIMARY KEY DEFAULT gen_random_uuid(),
                           booking_id        UUID           NOT NULL,
                           user_id           UUID           NOT NULL,
                           idempotency_key   VARCHAR(100)   NOT NULL,

@@ -4,10 +4,12 @@ import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
+import java.sql.Types;
 import java.time.Instant;
 import java.util.Map;
 import java.util.UUID;
@@ -34,6 +36,7 @@ public class Payment {
     private BigDecimal amount;
 
     @Column(nullable = false, length = 3)
+    @JdbcTypeCode(Types.CHAR)
     @Builder.Default
     private String currency = "USD";
 
@@ -57,6 +60,7 @@ public class Payment {
     private Map<String, Object> gatewayResponse;
 
     @Column(name = "card_last_four", length = 4)
+    @JdbcTypeCode(Types.CHAR)
     private String cardLastFour;
 
     @Column(name = "card_brand", length = 20)
