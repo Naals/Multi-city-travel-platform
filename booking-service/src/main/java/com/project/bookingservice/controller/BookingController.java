@@ -9,7 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,7 +26,7 @@ public class BookingController {
     @PostMapping
     @Operation(summary = "Create a booking — validates user (gRPC), locks seat (Feign), queues payment (RabbitMQ)")
     public ResponseEntity<BookingResponse> createBooking(
-            @AuthenticationPrincipal String userId,
+            @RequestHeader("X-User-Id") String userId,
             @Valid @RequestBody BookingRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(bookingService.createBooking(UUID.fromString(userId), request));
@@ -36,7 +36,7 @@ public class BookingController {
     @Operation(summary = "Get booking by ID (owner only)")
     public ResponseEntity<BookingResponse> getBooking(
             @PathVariable UUID id,
-            @AuthenticationPrincipal String userId) {
+            @RequestHeader("X-User-Id") String userId) {
         return ResponseEntity.ok(
                 bookingService.getBooking(id, UUID.fromString(userId))
         );
@@ -45,7 +45,8 @@ public class BookingController {
     @GetMapping("/my")
     @Operation(summary = "Get all bookings for current user")
     public ResponseEntity<List<BookingResponse>> getMyBookings(
-            @AuthenticationPrincipal String userId) {
+            @RequestHeader("X-User-Id") String userId
+            ) {
         return ResponseEntity.ok(
                 bookingService.getUserBookings(UUID.fromString(userId))
         );
@@ -55,7 +56,7 @@ public class BookingController {
     @Operation(summary = "Get all flight legs of a multi-city trip")
     public ResponseEntity<List<BookingResponse>> getTripBookings(
             @PathVariable UUID tripId,
-            @AuthenticationPrincipal String userId) {
+            @RequestHeader("X-User-Id") String userId) {
         return ResponseEntity.ok(bookingService.getTripBookings(tripId));
     }
 
@@ -64,7 +65,7 @@ public class BookingController {
     @Operation(summary = "Cancel a booking (releases seat, triggers refund if confirmed)")
     public ResponseEntity<Void> cancelBooking(
             @PathVariable UUID id,
-            @AuthenticationPrincipal String userId,
+            @RequestHeader("X-User-Id") String userId,
             @RequestParam(required = false, defaultValue = "USER_REQUESTED")
             CancellationReason reason,
             @RequestParam(required = false, defaultValue = "Cancelled by user")
