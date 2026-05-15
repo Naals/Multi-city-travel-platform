@@ -8,7 +8,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,7 +24,7 @@ public class ReviewController {
     @PostMapping
     @Operation(summary = "Submit a review (booking must be completed)")
     public ResponseEntity<ReviewDto> submit(
-            @AuthenticationPrincipal String userId,
+            @RequestHeader("X-User-Id") String userId,
             @Valid @RequestBody CreateReviewRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(reviewService.submitReview(
@@ -49,7 +48,7 @@ public class ReviewController {
     @GetMapping("/my")
     @Operation(summary = "Get current user's submitted reviews")
     public ResponseEntity<List<ReviewDto>> getMyReviews(
-            @AuthenticationPrincipal String userId) {
+            @RequestHeader("X-User-Id") String userId) {
         return ResponseEntity.ok(
                 reviewService.getMyReviews(UUID.fromString(userId)));
     }

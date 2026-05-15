@@ -1,3 +1,5 @@
 spring:
   application:
     name: review-service
+  config:
+    import: optional:configserver:http://${CONFIG_USER:config_user}:${CONFIG_PASSWORD:config_secret}@localhost:8888
