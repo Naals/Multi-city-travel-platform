@@ -14,7 +14,7 @@ spring:
     gateway:
       discovery:
         locator:
-          enabled: true
+          enabled: false
           lower-case-service-id: true
 
       default-filters:
@@ -71,7 +71,7 @@ spring:
           predicates:
             - Path=/api/routes/**
           filters:
-            - JwtAuthFilter
+
             - name: CircuitBreaker
               args:
                 name: flightServiceCB
@@ -82,7 +82,7 @@ spring:
           predicates:
             - Path=/api/flights/**
           filters:
-            - JwtAuthFilter
+
             - name: CircuitBreaker
               args:
                 name: flightServiceCB
@@ -219,5 +219,5 @@ management:
 
 logging:
   level:
-    org.springframework.cloud.gateway: DEBUG
-    com.project.gateway: DEBUG
+    org.springframework.cloud.gateway: INFO
+    com.project.gateway: INFO
