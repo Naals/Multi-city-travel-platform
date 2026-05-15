@@ -1,14 +1,16 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 CREATE TABLE review_eligibility (
-                                    id           UUID        PRIMARY KEY DEFAULT uuid_generate_v4(),
+                                    id           UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
                                     user_id      UUID        NOT NULL,
                                     flight_id    UUID        NOT NULL,
                                     booking_id   UUID        NOT NULL,
                                     trip_id      UUID        NOT NULL,
                                     eligible_at  TIMESTAMPTZ NOT NULL DEFAULT NOW(),
                                     reviewed     BOOLEAN     NOT NULL DEFAULT FALSE,
+                                    created_at      TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
                                     CONSTRAINT uq_eligibility UNIQUE (user_id, flight_id, booking_id)
+
 );
 
 CREATE INDEX idx_eligibility_user    ON review_eligibility (user_id);
@@ -17,7 +19,7 @@ CREATE INDEX idx_eligibility_pending
     ON review_eligibility (user_id) WHERE reviewed = FALSE;
 
 CREATE TABLE reviews (
-                         id           UUID         PRIMARY KEY DEFAULT uuid_generate_v4(),
+                         id           UUID         PRIMARY KEY DEFAULT gen_random_uuid(),
                          eligibility_id UUID       NOT NULL REFERENCES review_eligibility(id),
                          user_id      UUID         NOT NULL,
                          flight_id    UUID         NOT NULL,
