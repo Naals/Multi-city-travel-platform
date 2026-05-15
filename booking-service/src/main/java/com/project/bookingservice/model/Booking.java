@@ -69,12 +69,12 @@ public class Booking {
 
     @Enumerated(EnumType.STRING)
     @JdbcType(PostgreSQLEnumJdbcType.class)
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "booking_status")
     @Builder.Default
     private BookingStatus status = BookingStatus.PENDING;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "cancellation_reason")
+    @Column(name = "cancellation_reason", columnDefinition = "cancellation_reason")
     @JdbcType(PostgreSQLEnumJdbcType.class)
     private CancellationReason cancellationReason;
 

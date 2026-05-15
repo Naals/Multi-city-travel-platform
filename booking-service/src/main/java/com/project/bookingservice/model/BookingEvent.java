@@ -21,13 +21,13 @@ public class BookingEvent {
     private UUID bookingId;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "from_status")
+    @Column(name = "from_status", columnDefinition = "booking_status")
     @JdbcType(PostgreSQLEnumJdbcType.class)
     private BookingStatus fromStatus;
 
     @Enumerated(EnumType.STRING)
     @JdbcType(PostgreSQLEnumJdbcType.class)
-    @Column(name = "to_status", nullable = false)
+    @Column(name = "to_status", nullable = false, columnDefinition = "booking_status")
     private BookingStatus toStatus;
 
     @Column(name = "triggered_by", nullable = false, length = 50)
