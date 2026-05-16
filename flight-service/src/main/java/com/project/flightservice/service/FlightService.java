@@ -1,5 +1,8 @@
 package com.project.flightservice.service;
 
+import com.project.flightservice.dto.FlightAvailabilityResponse;
+import com.project.flightservice.dto.SeatLockRequest;
+import com.project.flightservice.dto.SeatLockResponse;
 import com.project.flightservice.exception.*;
 import com.project.flightservice.kafka.FlightEventProducer;
 import com.project.flightservice.kafka.event.*;
@@ -88,6 +91,40 @@ public class FlightService {
     public Flight findOrThrow(UUID id) {
         return flightRepository.findById(id)
                 .orElseThrow(() -> new FlightNotFoundException("Flight not found: " + id));
+    }
+
+    @Transactional
+    public SeatLockResponse lockSeat(UUID flightId, SeatLockRequest request) {
+        Flight flight = flightRepository.findByIdForUpdate(flightId)
+                .orElseThrow(() -> new RuntimeException("Flight not found"));
+
+        if(flight.isBookable()){
+            flightRepository.save(flight);
+            return new SeatLockResponse(flight.getSeatsAvailable());
+        }
+
+        throw new RuntimeException("Flight not bookable");
+    }
+
+    @Transactional
+    public void releaseSeat(UUID flightId, SeatLockRequest request) {
+        Flight flight = flightRepository.findByIdForUpdate(flightId)
+                .orElseThrow(() -> new RuntimeException("Flight not found"));
+
+        flight.setSeatsTotal(flight.getSeatsTotal() + 1);
+        flightRepository.save(flight);
+    }
+
+    @Transactional(readOnly = true)
+    public FlightAvailabilityResponse getAvailability(UUID flightId) {
+        Flight flight = flightRepository.findById(flightId)
+                .orElseThrow(() -> new RuntimeException("Flight not found"));
+
+        return new FlightAvailabilityResponse(
+                flight.getId(),
+                flight.getSeatsAvailable(),
+                flight.getSeatsTotal()
+        );
     }
 
 

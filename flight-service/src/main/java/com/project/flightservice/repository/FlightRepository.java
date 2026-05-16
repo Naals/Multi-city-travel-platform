@@ -2,7 +2,9 @@ package com.project.flightservice.repository;
 
 import com.project.flightservice.model.Flight;
 import com.project.flightservice.model.FlightStatus;
+import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -58,4 +60,8 @@ public interface FlightRepository extends JpaRepository<Flight, UUID> {
             @Param("reason")         String reason,
             @Param("actualDeparture") Instant actualDeparture
     );
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("SELECT f FROM Flight f WHERE f.id = :id")
+    Optional<Flight> findByIdForUpdate(@Param("id") UUID id);
 }

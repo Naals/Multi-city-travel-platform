@@ -1,5 +1,8 @@
 package com.project.flightservice.controller;
 
+import com.project.flightservice.dto.FlightAvailabilityResponse;
+import com.project.flightservice.dto.SeatLockRequest;
+import com.project.flightservice.dto.SeatLockResponse;
 import com.project.flightservice.model.Flight;
 import com.project.flightservice.service.FlightService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -45,5 +48,29 @@ public class FlightController {
     @Operation(summary = "Get flight by ID")
     public ResponseEntity<Flight> getFlight(@PathVariable("id") UUID id) {
         return ResponseEntity.ok(flightService.findOrThrow(id));
+    }
+
+    @GetMapping("/{flightId}/availability")
+    public ResponseEntity<FlightAvailabilityResponse> checkAvailability(
+            @PathVariable UUID flightId
+    ) {
+        return ResponseEntity.ok(flightService.getAvailability(flightId));
+    }
+
+    @PostMapping("/{flightId}/seats/lock")
+    public ResponseEntity<SeatLockResponse> lockSeat(
+            @PathVariable UUID flightId,
+            @RequestBody SeatLockRequest request
+    ) {
+        return ResponseEntity.ok(flightService.lockSeat(flightId, request));
+    }
+
+    @PostMapping("/{flightId}/seats/release")
+    public ResponseEntity<Void> releaseSeat(
+            @PathVariable UUID flightId,
+            @RequestBody SeatLockRequest request
+    ) {
+        flightService.releaseSeat(flightId, request);
+        return ResponseEntity.ok().build();
     }
 }
