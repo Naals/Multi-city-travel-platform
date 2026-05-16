@@ -31,11 +31,11 @@ public class Flight {
     @Column(name = "airline_name", nullable = false, length = 100)
     private String airlineName;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "origin_airport_id", nullable = false)
     private Airport originAirport;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "dest_airport_id", nullable = false)
     private Airport destAirport;
 

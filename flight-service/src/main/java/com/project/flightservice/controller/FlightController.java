@@ -43,7 +43,7 @@ public class FlightController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Get flight by ID")
-    public ResponseEntity<Flight> getFlight(@PathVariable UUID id) {
+    public ResponseEntity<Flight> getFlight(@PathVariable("id") UUID id) {
         return ResponseEntity.ok(flightService.findOrThrow(id));
     }
 }
