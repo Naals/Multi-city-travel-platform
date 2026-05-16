@@ -20,6 +20,7 @@ public class CorrelationIdFilter implements GlobalFilter, Ordered {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange,
                              GatewayFilterChain chain) {
+
         ServerHttpRequest request = exchange.getRequest();
 
         String correlationId = request.getHeaders()
@@ -29,24 +30,26 @@ public class CorrelationIdFilter implements GlobalFilter, Ordered {
             correlationId = UUID.randomUUID().toString();
         }
 
-        final String finalCorrelationId = correlationId;
-
         log.debug("Request: method={} path={} correlationId={}",
                 request.getMethod(),
                 request.getPath(),
-                finalCorrelationId);
+                correlationId);
 
-        // Inject into downstream request
-        ServerHttpRequest mutated = request.mutate()
-                .header(CORRELATION_ID_HEADER, finalCorrelationId)
+        // mutate downstream request
+        ServerHttpRequest mutatedRequest = request.mutate()
+                .header(CORRELATION_ID_HEADER, correlationId)
                 .build();
 
-        // Also add to response so client can track it
-        return chain.filter(exchange.mutate().request(mutated).build())
-                .then(Mono.fromRunnable(() ->
-                        exchange.getResponse().getHeaders()
-                                .add(CORRELATION_ID_HEADER, finalCorrelationId)
-                ));
+        // add response header BEFORE chain.filter()
+        exchange.getResponse()
+                .getHeaders()
+                .add(CORRELATION_ID_HEADER, correlationId);
+
+        return chain.filter(
+                exchange.mutate()
+                        .request(mutatedRequest)
+                        .build()
+        );
     }
 
     @Override

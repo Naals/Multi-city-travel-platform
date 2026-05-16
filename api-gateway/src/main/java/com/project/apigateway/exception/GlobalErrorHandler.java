@@ -31,6 +31,10 @@ public class GlobalErrorHandler implements ErrorWebExceptionHandler {
         ServerHttpResponse response = exchange.getResponse();
         DataBufferFactory bufferFactory = response.bufferFactory();
 
+        if (response.isCommitted()) {
+            return Mono.error(ex);
+        }
+
         HttpStatus status;
         String message;
 
